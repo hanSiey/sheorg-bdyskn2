@@ -1,0 +1,141 @@
+{% extends "templates/admin_panel/admin_main.html" %}
+{%load static %}
+{% block content %}
+<div id="app">
+{% include "templates/admin_panel/nav.html" %}
+<aside class="aside is-placed-left is-expanded">
+  <div class="aside-tools">
+    <div>
+      Administration <b class="font-black">Panel</b>
+    </div>
+  </div>
+  <div class="menu is-menu-main">
+    <p class="menu-label">General</p>
+    <ul class="menu-list">
+      <li class="active">
+        <a href="{% url 'dashboard' %}">
+          <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+          <span class="menu-item-label">Dashboard</span>
+        </a>
+      </li>
+    </ul>
+
+    <ul class="menu-list">
+      <li>
+        <a href="{% url 'distributors' %}">
+          <span class="icon"><i class="mdi mdi-table"></i></span>
+          <span class="menu-item-label">Distributors</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'products' %}">
+          <span class="icon"><i class="mdi mdi-square-edit-outline"></i></span>
+          <span class="menu-item-label">Products</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'customers' %}">
+          <span class="icon"><i class="mdi mdi-account-circle"></i></span>
+          <span class="menu-item-label">Customers</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>
+
+<section class="is-title-bar">
+  <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+    <ul>
+      <li>Admin</li>
+      <li>Orders</li>
+      <li>View Order</li>
+    </ul>
+  </div>
+</section>
+
+<section class="is-hero-bar">
+  <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+    <h1 class="title">
+      #{{order.transaction_id|floatformat:0}}
+    </h1>
+  </div>
+</section>
+  <section class="section main-section">
+    <div class="card mb-6">
+      <div class="card-content">
+
+        <div class="field">
+          <h3 style="font-weight:bold;">Delivery Information</h3>
+          <br/>
+          <div class="control">
+              {% for address in addresses %}
+                <p class="card-category">Address: {{address.address}}</p>
+                <p class="card-category">City/Town: {{address.city}}</p>
+                <p class="card-category">Province: {{address.state}}</p>
+                <p class="card-category">Posttal Code: {{address.zipcode}}</p>
+              {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section main-section">
+    <div class="card mb-6 has-table">
+      <div class="card-content">
+         <table>
+          <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for item in order_items %}
+          <tr>
+            <td data-label="Product">{{item.product.name}}</td>
+            <td data-label="Price">R {{item.product.price}}</td>
+            <td data-label="Quantity">{{item.quantity}}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <br/>
+        <div class="field">
+          <h3 style="font-weight:bold;">Total Amount Due:</h3>
+          <div class="control">
+            R{{total}}
+          </div>
+        </div>
+        <div class="field">
+          <h3 style="font-weight:bold;">Status:</h3>
+          <div class="control">
+            {{order.status}}
+          </div>
+        </div>
+        <br/>
+        <div class="field grouped">
+            <div class="control">
+              <button type="submit" id="status" class="button green">
+                Update Status
+              </button>
+            </div>
+        </div>
+        <form method="POST" action="" id="update_status">
+          {% csrf_token %}
+          {{update_form}}
+          <input class="button blue" type="submit">
+        </form>
+      </div>
+    </div> 
+  </section>
+  <script type="text/javascript">
+            document.getElementById('update_status').style.display = "none";
+
+            var updateStatus = document.getElementById('status')
+            updateStatus.addEventListener('click',function(e){
+              e.preventDefault()
+              document.getElementById('update_status').style.display = "block";
+            })
+  </script>
+{%  endblock content %}

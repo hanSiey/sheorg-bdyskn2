@@ -1,0 +1,223 @@
+{% extends "templates/admin_panel/admin_main.html" %}
+{%load static %}
+{% block content %}
+<div id="app">
+{% include "templates/admin_panel/nav.html" %}
+<aside class="aside is-placed-left is-expanded">
+  <div class="aside-tools">
+    <div>
+      Administration <b class="font-black">Panel</b>
+    </div>
+  </div>
+  <div class="menu is-menu-main">
+    <p class="menu-label">General</p>
+    <ul class="menu-list">
+      <li class="active">
+        <a href="{% url 'dashboard' %}">
+          <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+          <span class="menu-item-label">Dashboard</span>
+        </a>
+      </li>
+    </ul>
+
+    <ul class="menu-list">
+      <li>
+        <a href="{% url 'distributors' %}">
+          <span class="icon"><i class="mdi mdi-table"></i></span>
+          <span class="menu-item-label">Distributors</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'products' %}">
+          <span class="icon"><i class="mdi mdi-square-edit-outline"></i></span>
+          <span class="menu-item-label">Products</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'customers' %}">
+          <span class="icon"><i class="mdi mdi-account-circle"></i></span>
+          <span class="menu-item-label">Customers</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>
+
+<section class="is-title-bar">
+  <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+    <ul>
+      <li>Admin</li>
+      <li>Dashboard</li>
+    </ul>
+  </div>
+</section>
+
+<section class="is-hero-bar">
+  <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+    <h1 class="title">
+      Overview
+    </h1>
+  </div>
+</section>
+
+  <section class="section main-section">
+    <div class="grid gap-6 grid-cols-1 md:grid-cols-3 mb-6">
+      <div class="card">
+        <div class="card-content">
+          <div class="flex items-center justify-between">
+            <div class="widget-label">
+              <h3>
+                Customers
+              </h3>
+              <h1>
+                {{total_customers}}
+              </h1>
+            </div>
+            <span class="icon widget-icon text-green-500"><i class="mdi mdi-account-multiple mdi-48px"></i></span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-content">
+          <div class="flex items-center justify-between">
+            <div class="widget-label">
+              <h3>
+                Distributors
+              </h3>
+              <h1>
+                {{total_distributors}}
+              </h1>
+            </div>
+            <span class="icon widget-icon text-blue-500"><i class="mdi mdi-cart-outline mdi-48px"></i></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-content">
+          <div class="flex items-center justify-between">
+            <div class="widget-label">
+              <h3>
+                  Messages
+              </h3>
+              <h1>
+                {{total_messages}}
+              </h1>
+            </div>
+            <span class="icon widget-icon text-red-500"><i class="mdi mdi-finance mdi-48px"></i></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-content">
+          <div class="flex items-center justify-between">
+            <div class="widget-label">
+              <h3>
+                Delivered
+              </h3>
+              <h1>
+                {{total_d}}
+              </h1>
+            </div>
+            <span class="icon widget-icon text-blue-500"><i class="mdi mdi-pin mdi-48px"></i></span>
+          </div>
+        </div>
+      </div>
+  
+      <div class="card">
+        <div class="card-content">
+          <div class="flex items-center justify-between">
+            <div class="widget-label">
+              <h3>
+                Out on delivery
+              </h3>
+              <h1>
+                {{out_on_d}}
+              </h1>
+            </div>
+            <span class="icon widget-icon text-red-500"><i class="mdi mdi-car mdi-48px"></i></span>
+          </div>
+        </div>
+      </div>
+  
+      <div class="card">
+        <div class="card-content">
+          <div class="flex items-center justify-between">
+            <div class="widget-label">
+              <h3>
+                Pending
+              </h3>
+              <h1>
+                {{pending}}
+              </h1>
+            </div>
+            <span class="icon widget-icon text-green-500"><i class="mdi mdi-run mdi-48px"></i></span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-content">
+          <div class="flex items-center justify-between">
+            <div class="widget-label">
+              <h3>
+                Products
+              </h3>
+              <h1>
+                {{products}}
+              </h1>
+            </div>
+            <span class="icon widget-icon text-red-500"><i class="mdi mdi-water mdi-48px"></i></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+    <div class="card has-table">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon"><i class="mdi mdi-cart-outline"></i></span>
+          Orders
+        </p>
+      </header>
+      <div class="card-content">
+        <table>
+          <thead>
+          <tr>
+            <th>Transaction ID</th>
+            <th>Ordered By</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for order in orders %}
+          <tr>
+            <td data-label="TransactionId">{{order.transaction_id|floatformat:0}}</td>
+            <td data-label="Name">{{order.customer.name}} {{order.customer.surname}}</td>
+            <td data-label="City">{{order.status}}</td>
+            <td data-label="Created">
+              <small class="text-gray-500" title="{{order.date_ordered}}">{{order.date_ordered}}</small>
+            </td>
+            <td class="actions-cell">
+              <div class="buttons right nowrap">
+                <button class="button small green --jb-modal" type="button">
+                  <a href="{% url 'view_order' order.id %}"><span class="icon"><i class="mdi mdi-eye"></i></span></a>
+                </button>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </section>
+
+{%  endblock content %}

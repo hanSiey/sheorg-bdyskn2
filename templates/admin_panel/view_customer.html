@@ -1,0 +1,128 @@
+{% extends "templates/admin_panel/admin_main.html" %}
+{%load static %}
+{% block content %}
+<div id="app">
+{% include "templates/admin_panel/nav.html" %}
+<aside class="aside is-placed-left is-expanded">
+  <div class="aside-tools">
+    <div>
+      Administration <b class="font-black">Panel</b>
+    </div>
+  </div>
+  <div class="menu is-menu-main">
+    <p class="menu-label">General</p>
+    <ul class="menu-list">
+      <li>
+        <a href="{% url 'dashboard' %}">
+          <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
+          <span class="menu-item-label">Dashboard</span>
+        </a>
+      </li>
+    </ul>
+
+    <ul class="menu-list">
+      <li>
+        <a href="{% url 'distributors' %}">
+          <span class="icon"><i class="mdi mdi-table"></i></span>
+          <span class="menu-item-label">Distributors</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'products' %}">
+          <span class="icon"><i class="mdi mdi-square-edit-outline"></i></span>
+          <span class="menu-item-label">Products</span>
+        </a>
+      </li>
+      <li class="active">
+        <a href="{% url 'customers' %}">
+          <span class="icon"><i class="mdi mdi-account-circle"></i></span>
+          <span class="menu-item-label">Customers</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>
+
+<section class="is-title-bar">
+  <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+    <ul>
+      <li>Admin</li>
+      <li>Customers</li>
+      <li>View Customer</li>
+    </ul>
+  </div>
+</section>
+
+<section class="is-hero-bar">
+  <div class="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0">
+    <h1 class="title">
+      {{customer.name}} {{customer.surname}}
+    </h1>
+  </div>
+</section>
+
+  <section class="section main-section">
+    <div class="card mb-6">
+      <div class="card-content">
+
+        <div class="field">
+          <h3 style="font-weight:bold;">Details</h3>
+          <br/>
+          <div class="control">
+              <h5 class="card-title">Email: {{customer.email}}</h5>
+              <h5 class="card-title">Contact No: {{customer.phone}}</h5>
+              <h5 class="card-title">Total Orders: {{orders_count}}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+      <div class="card has-table">
+      <header class="card-header">
+        <p class="card-header-title">
+          <span class="icon"><i class="mdi mdi-cart-outline"></i></span>
+          Order History
+        </p>
+      </header>
+      <div class="card-content">
+        <table>
+          <thead>
+          <tr>
+            <th>Transaction ID</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for order in orders %}
+          <tr>
+            <td data-label="TransactionId">{{order.transaction_id|floatformat:0}}</td>
+            <td data-label="Status">{{order.status}}</td>
+            <td data-label="Date">
+              <small class="text-gray-500" title="{{order.date_ordered}}">{{order.date_ordered}}</small>
+            </td>
+            <td class="actions-cell">
+              <div class="buttons right nowrap">
+                <button class="button small green --jb-modal" type="button">
+                  <a href="{% url 'view_order' order.id %}"><span class="icon"><i class="mdi mdi-eye"></i></span></a>
+                </button>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </section>
+  <script type="text/javascript">
+            document.getElementById('update_status').style.display = "none";
+
+            var updateStatus = document.getElementById('status')
+            updateStatus.addEventListener('click',function(e){
+              e.preventDefault()
+              document.getElementById('update_status').style.display = "block";
+            })
+  </script>
+{%  endblock content %}
