@@ -128,7 +128,7 @@ def store(request):
 			order = data['order']
 			items = data['items']
 
-			products = Product.objects.all()
+			products = Product.objects.all().filter(status='Available')
 			context = {'products':products, 'cartItems':cartItems}
 			return render(request, 'store/shop.html', context)
 
