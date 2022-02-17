@@ -229,7 +229,8 @@ def processOrder(request):
 			'New Order',
 			template_admin,
 			settings.EMAIL_HOST_USER,
-			['Shebeautyandorganics@gmail.com']
+			['hantsitaumang@gmail.com']
+			#['Shebeautyandorganics@gmail.com']
 		)
 		email_admin.fail_silently = False
 		email_admin.send()
