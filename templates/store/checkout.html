@@ -120,10 +120,13 @@
                     userFormData.email = form.email.value
                 }
 
-                var url = "process_order"
+                var url = "http://www.sheorganic.co.za/shop/process_order"
                 fetch(url, {
                     method:'POST',
+                    mode: 'cors',
+                    credentials: 'same-origin',
                     headers:{
+                        'Accept': 'application/json',
                         'Content-Type':'applicaiton/json',
                         'X-CSRFToken':csrftoken,
                     }, 
@@ -132,7 +135,6 @@
                 })
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log('Success:', data);
                     alert('Order Successfully Placed');  
 
                     cart = {}
