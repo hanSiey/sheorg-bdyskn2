@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from django.shortcuts import render,redirect
 from django.http import JsonResponse
 import json
@@ -190,7 +191,7 @@ def updateItem(request):
 		return JsonResponse('Item was added', safe=False)
 
 
-def processOrder(request):
+def process(request):
 		transaction_id = datetime.now().timestamp()
 		data = json.loads(request.body)
 
@@ -244,7 +245,7 @@ def processOrder(request):
 		)
 		email_customer.fail_silently = False
 		email_customer.send()
-		return JsonResponse('Order Placed..', safe=False)
+		return JsonResponse('order succefull', safe=False)
 
 def customer(request, pk):
 		if request.user.is_superuser :

@@ -6,10 +6,10 @@ from cloudinary.models import CloudinaryField
 
 class Customer(models.Model):
 	user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-	name = models.CharField(max_length=20, null=True)
-	surname = models.CharField(max_length=20, null=True)
-	email = models.CharField(max_length=200)
-	phone = models.CharField(max_length=15, null=True)
+	name = models.CharField(max_length=20, null=True, blank=True)
+	surname = models.CharField(max_length=20, null=True, blank=True)
+	email = models.CharField(max_length=200,null=True, blank=True)
+	phone = models.CharField(max_length=15, null=True, blank=True)
 
 	def __str__(self):
 		return self.name

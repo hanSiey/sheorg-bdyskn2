@@ -20,10 +20,10 @@ urlpatterns = [
     path('shop/cart', views.cart, name="cart"),
     path('shop/checkout', views.checkout, name="checkout"),
     path('update_item', views.updateItem, name="update_item"),
-	path('shop/process_order', views.processOrder, name="process_order"),
+	path('shop/process/', views.process, name="process"),
 
     path('myaccount/customer/<str:pk>', views.customer, name="customer"),
-    path('myaccount/customer/view_order/<str:pk>', views.view_order, name="view_order"),
+    path('myaccount/customer/view_order/<str:pk>', views.view_order, name="view_customer_order"),
 
     path(
         'login/reset_password/',

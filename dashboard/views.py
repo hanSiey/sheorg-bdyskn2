@@ -109,7 +109,7 @@ def customers_table(request):
     customers = Customer.objects.all().order_by('-id')
     return render(request, "admin_panel/customers.html", {'customers':customers})
 
-
+@admin_only  
 def ViewOrder(request, pk):
     order = Order.objects.get(id=pk)
     order_total_amount = order.get_cart_total
@@ -132,6 +132,7 @@ def ViewOrder(request, pk):
     }     
     return render(request, "admin_panel/view_order.html", context)
 
+@admin_only  
 def ViewProduct(request, pk):
     product = Product.objects.get(id=pk)
     if request.method == 'POST':
@@ -147,6 +148,7 @@ def ViewProduct(request, pk):
     }
     return render(request, "admin_panel/view_product.html", context)
 
+@admin_only  
 def ViewCustomer(request, pk):
     customer = Customer.objects.get(id=pk)
     orders = customer.order_set.all().filter(complete=True).order_by('-id')
@@ -159,37 +161,42 @@ def ViewCustomer(request, pk):
         }
     return render(request, "admin_panel/view_customer.html", context)
 
+@admin_only  
 def ViewMessage(request, pk):
     single_message = ClientMessage.objects.get(id=pk)
     return render(request, "admin_panel/view_message.html", {'message':single_message})
 
-
+@admin_only  
 def deleteDistributor(request, pk):
 	distributor = Distributor.objects.get(id=pk)
 	distributor.delete() 
 	return redirect('distributors')
     
-
+@admin_only  
 def deleteCustomer(request, pk):
 	customer = Customer.objects.get(id=pk)
 	customer.delete()
 	return redirect('customers')
 
+@admin_only  
 def delete_Order(request, pk):
 	order = Order.objects.get(id=pk)
 	order.delete()
 	return redirect('/')
 
+@admin_only  
 def deleteOrder(request, pk):
 	order = Order.objects.get(id=pk)
 	order.delete()
 	return redirect('orders')
 
+@admin_only  
 def deleteProduct(request, pk):
 	product = Product.objects.get(id=pk)
 	product.delete()
 	return redirect('products')
-
+    
+@admin_only  
 def deleteMessage(request, pk):
     single_message = ClientMessage.objects.get(id=pk)
     single_message.delete()

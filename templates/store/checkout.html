@@ -35,45 +35,46 @@
                                 <h5>Delivery Information</h5>
           
                             </div>
-
+                
                             <form id="form">
                                 <div class="row">
                                     <div id="user-info" style="width:100%;">
-                                    <div class="col-md-12 mb-3">
-                                        <label for="first_name">First Name <span>*</span></label>
-                                        <input type="text" class="form-control" id="first_name" name="name">
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="last_name">Last Name <span>*</span></label>
-                                        <input type="text" class="form-control" id="last_name" name="surname">
-                                    </div>
-                                     <div class="col-12 mb-3">
-                                        <label for="phone_number">Phone No <span>*</span></label>
-                                        <input type="text" class="form-control" id="phone_number" name="phone">
-                                    </div>
-                                    <div class="col-12 mb-4">
-                                        <label for="email_address">Email Address <span>*</span></label>
-                                        <input type="email" class="form-control" id="email_address" name="email">
-                                    </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="first_name">First Name <span>*</span></label>
+                                            <input class="form-control" name="name" type="text" id="first-name">
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="last_name">Last Name <span>*</span></label>
+                                            <input class="form-control" name="surname" type="text" id="last-name">
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <label for="phone_number">Phone No <span>*</span></label>
+                                            <input class="form-control" name="phone" type="text" id="phone">
+                                        </div>
+                                        <div class="col-12 mb-4">
+                                            <label for="email_address">Email Address <span>*</span></label>
+                                            <input class="form-control" name="email" type="email" id="mail">
+                                        </div>
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label for="street_address">Address <span>*</span></label>
-                                        <input type="text" class="form-control mb-3" id="street_address" name="address" required>
+                                        <input class="form-control" name="address" type="text" id="address">
                                         
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label for="postcode">Postcode <span>*</span></label>
-                                        <input type="text" class="form-control" id="postcode" name="zipcode" required>
+                                        <input class="form-control" name="zipcode" type="text" id="zipcode">
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label for="city">Town/City <span>*</span></label>
-                                        <input type="text" class="form-control" id="city" name="city" required>
+                                        <input class="form-control" name="city" type="text" id="city">
                                     </div>
                                     <div class="col-12 mb-3">
                                         <label for="state">Province <span>*</span></label>
-                                        <input type="text" class="form-control" id="state" name="state" required>
+                                        <input class="form-control" name="state" type="text" id="state">
                                     </div>
                                 </div>
+
                                 <input type="submit" id="form-button" class="btn karl-checkout-btn" value="Place Order">
                             </form>
                         </div>
@@ -84,17 +85,18 @@
             </div>
         </div>
         <!-- ****** Checkout Area End ****** -->
-        <script type="text/javascript">
+        <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.1.0/fetch.js"></script>
+        <script type="text/javascript"> 
             var total = {{order.get_cart_total|floatformat:2}}
             document.getElementById('user-info').style.display = "none";
             if (user == 'AnonymousUser'){
                 document.getElementById('user-info').style.display = "block";
             }
+
             var form = document.getElementById('form')
             form.addEventListener('submit', function(e){
-                e.preventDefault()
-                console.log('Form Submitted...')
-                submitFormData()   
+                e.preventDefault();
+                submitFormData()
             })
             function submitFormData(){
                 console.log('Form in data...')
@@ -119,16 +121,14 @@
                     userFormData.phone = form.phone.value
                     userFormData.email = form.email.value
                 }
-
-                var url = "http://www.sheorganic.co.za/shop/process_order"
+                
+                var url = "/shop/process/"
                 fetch(url, {
                     method:'POST',
-                    mode: 'cors',
-                    credentials: 'same-origin',
                     headers:{
                         'Accept': 'application/json',
                         'Content-Type':'applicaiton/json',
-                        'X-CSRFToken':csrftoken,
+                        'X-CSRFToken': csrftoken,
                     }, 
                     body:JSON.stringify({'form':userFormData, 'shipping':shippingInfo}),
                     
@@ -143,6 +143,8 @@
                     window.location.href = "{% url 'shop' %}"
 
                     })
+
+                
             }
         </script>
 {% endblock content %}
