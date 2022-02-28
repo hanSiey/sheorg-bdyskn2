@@ -162,6 +162,60 @@ def checkout(request):
 				'cartItems':cartItems,
 				'form':checkout_form,
 			}
+			if request.method == "POST":
+				transaction_id = datetime.now().timestamp()
+				data = json.loads(request.body)
+
+				if request.user.is_authenticated:
+					customer = request.user.customer
+					order, created = Order.objects.get_or_create(customer=customer, complete=False)
+				else:
+					customer, order = guestOrder(request, data)
+
+				total = float(data['form']['total'])
+				order.transaction_id = transaction_id
+
+				if total == order.get_cart_total:
+					order.complete = True
+				order.save()
+
+				if order.shipping == True:
+					ShippingAddress.objects.create(
+					customer=customer,
+					order=order,
+					address=data['shipping']['address'],
+					city=data['shipping']['city'],
+					state=data['shipping']['state'],
+					zipcode=data['shipping']['zipcode'],
+					)
+
+				context = {
+					'name': order.customer.name,
+					'surname':order.customer.surname,
+					'total': total,
+					'items': order.get_cart_items,
+				}
+
+				template_admin = render_to_string('templates/store/order_info_email.html', context)
+				email_admin = EmailMessage(
+					'New Order',
+					template_admin,
+					settings.EMAIL_HOST_USER,
+					['hantsitaumang@gmail.com']
+					#['Shebeautyandorganics@gmail.com']
+				)
+				email_admin.fail_silently = False
+				email_admin.send()
+
+				template_customer = render_to_string('templates/store/order_confirmation_email.html', context)
+				email_customer = EmailMessage(
+					'Order Confirmation',
+					template_customer,
+					settings.EMAIL_HOST_USER,
+					[str(order.customer.email)]
+				)
+				email_customer.fail_silently = False
+				email_customer.send()
 			return render(request, 'store/checkout.html', context)
 
 def updateItem(request):
@@ -191,59 +245,6 @@ def updateItem(request):
 
 
 def process(request):
-		transaction_id = datetime.now().timestamp()
-		data = json.loads(request.body)
-
-		if request.user.is_authenticated:
-			customer = request.user.customer
-			order, created = Order.objects.get_or_create(customer=customer, complete=False)
-		else:
-			customer, order = guestOrder(request, data)
-
-		total = float(data['form']['total'])
-		order.transaction_id = transaction_id
-
-		if total == order.get_cart_total:
-			order.complete = True
-		order.save()
-
-		if order.shipping == True:
-			ShippingAddress.objects.create(
-			customer=customer,
-			order=order,
-			address=data['shipping']['address'],
-			city=data['shipping']['city'],
-			state=data['shipping']['state'],
-			zipcode=data['shipping']['zipcode'],
-			)
-
-		context = {
-			'name': order.customer.name,
-			'surname':order.customer.surname,
-			'total': total,
-			'items': order.get_cart_items,
-		}
-
-		template_admin = render_to_string('templates/store/order_info_email.html', context)
-		email_admin = EmailMessage(
-			'New Order',
-			template_admin,
-			settings.EMAIL_HOST_USER,
-			['hantsitaumang@gmail.com']
-			#['Shebeautyandorganics@gmail.com']
-		)
-		email_admin.fail_silently = False
-		email_admin.send()
-
-		template_customer = render_to_string('templates/store/order_confirmation_email.html', context)
-		email_customer = EmailMessage(
-			'Order Confirmation',
-			template_customer,
-			settings.EMAIL_HOST_USER,
-			[str(order.customer.email)]
-		)
-		email_customer.fail_silently = False
-		email_customer.send()
 		return JsonResponse('order succefull', safe=False)
 
 def customer(request, pk):

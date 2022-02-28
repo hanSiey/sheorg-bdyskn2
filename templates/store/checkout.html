@@ -122,7 +122,7 @@
                     userFormData.email = form.email.value
                 }
                 
-                var url = "/shop/process/"
+                var url = "{% url 'checkout' %}"
                 fetch(url, {
                     method:'POST',
                     headers:{
@@ -133,18 +133,22 @@
                     body:JSON.stringify({'form':userFormData, 'shipping':shippingInfo}),
                     
                 })
-                .then((response) => response.json())
+                .then((response) => {
+                        if (!response.ok) {
+                            // error processing
+                            throw 'Error';
+                        }
+                        return response.json()
+                 })
                 .then((data) => {
-                    alert('Order Successfully Placed');  
+                    alert('Order Successfully Placed')  
 
                     cart = {}
                     document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
 
                     window.location.href = "{% url 'shop' %}"
 
-                    })
-
-                
+                    })    
             }
         </script>
 {% endblock content %}
